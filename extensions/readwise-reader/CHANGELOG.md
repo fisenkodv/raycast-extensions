@@ -1,5 +1,16 @@
 # Readwise Reader Changelog
 
+## [Add Current Tab Fallback to Save Link Command] - 2026-05-23
+
+- Make the `Save Link` URL argument optional.
+- Fall back to the active browser tab URL when no URL is provided.
+
+## Minor fixes - 2025-09-01
+
+- Use correct URL when opening an article.
+- Update the Search command to respect preferences.
+- Add Archive to default search location preferences.
+
 ## [Add desktop app support] - 2025-07-14
 
 - Add option to open documents in Readwise Reader desktop app
