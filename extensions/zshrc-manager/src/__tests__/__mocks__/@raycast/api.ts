@@ -36,6 +36,8 @@ export const Icon = {
   Undo: "undo" as const,
   Clipboard: "clipboard" as const,
   List: "list" as const,
+  Lock: "lock" as const,
+  MagnifyingGlass: "magnifying-glass" as const,
 };
 
 // Mock ActionPanel component
@@ -143,9 +145,13 @@ Form.TextField = ({ children, value, onChange, ...props }: any) => {
   );
 };
 
-Form.Dropdown = ({ children, ...props }: any) => {
+const FormDropdown = ({ children, ...props }: any) => {
   return React.createElement("select", { "data-testid": "form-dropdown", ...props }, children);
 };
+FormDropdown.Item = ({ title, value, ...props }: any) => {
+  return React.createElement("option", { "data-testid": "form-dropdown-item", value, ...props }, title);
+};
+Form.Dropdown = FormDropdown;
 
 Form.TextArea = ({ children, ...props }: any) => {
   return React.createElement("textarea", { "data-testid": "form-textarea", ...props }, children);
@@ -162,6 +168,15 @@ export const List = (props: any) => {
   if (props.navigationTitle) {
     content.push(React.createElement("div", { key: "navigation-title" }, props.navigationTitle));
   }
+  if (props.searchBarAccessory) {
+    content.push(
+      React.createElement(
+        "div",
+        { key: "search-bar-accessory", "data-testid": "search-bar-accessory" },
+        props.searchBarAccessory,
+      ),
+    );
+  }
   if (props.children) {
     content.push(props.children);
   }
@@ -169,7 +184,7 @@ export const List = (props: any) => {
   return React.createElement("div", { "data-testid": "list", className: props.className }, content);
 };
 
-List.Item = ({ children, title, subtitle, accessories, detail, ...props }: any) => {
+List.Item = ({ children, title, subtitle, accessories, detail, actions, ...props }: any) => {
   const content = [];
   if (title) content.push(React.createElement("div", { key: "title" }, title));
   if (subtitle) content.push(React.createElement("div", { key: "subtitle" }, subtitle));
@@ -189,6 +204,8 @@ List.Item = ({ children, title, subtitle, accessories, detail, ...props }: any) 
     content.push(React.createElement("div", { key: "accessories" }, accessoryContent));
   }
   if (detail) content.push(React.createElement("div", { key: "detail" }, detail));
+  if (actions)
+    content.push(React.createElement("div", { key: "actions", "data-testid": "list-item-actions" }, actions));
   if (children) content.push(children);
 
   return React.createElement("div", { "data-testid": "list-item", ...props }, content);
@@ -218,6 +235,10 @@ const ListItemDetail = ({ children, markdown, metadata, ...props }: any) => {
   }
   if (children) content.push(children);
   return React.createElement("div", { "data-testid": "list-item-detail-metadata-label", ...props }, content);
+};
+
+(ListItemDetail as any).Metadata.Separator = (props: any) => {
+  return React.createElement("hr", { "data-testid": "metadata-separator", ...props });
 };
 
 (ListItemDetail as any).Metadata.TagList = ({ children, ...props }: any) => {
